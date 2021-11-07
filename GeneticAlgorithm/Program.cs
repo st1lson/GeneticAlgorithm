@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeneticAlgorithm.Core;
+using GeneticAlgorithm.Hanlders;
 
 namespace GeneticAlgorithm
 {
@@ -6,7 +7,12 @@ namespace GeneticAlgorithm
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Config config = new()
+            {
+                Path = "default.txt"
+            };
+
+            new InputHandler(config).Menu();
         }
     }
 }
