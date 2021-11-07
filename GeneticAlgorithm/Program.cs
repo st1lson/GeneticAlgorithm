@@ -1,5 +1,7 @@
 ﻿using GeneticAlgorithm.Core;
 using GeneticAlgorithm.Hanlders;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace GeneticAlgorithm
 {
@@ -7,11 +9,8 @@ namespace GeneticAlgorithm
     {
         static void Main(string[] args)
         {
-            Config config = new()
-            {
-                Path = "default.txt"
-            };
-
+            string data = File.ReadAllText("config.json");
+            Config config = JsonConvert.DeserializeObject<Config>(data);
             new InputHandler(config).Menu();
         }
     }

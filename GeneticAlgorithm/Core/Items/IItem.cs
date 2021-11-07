@@ -3,6 +3,6 @@
     internal interface IItem
     {
         public string Name { get; }
-        public string Weight { get; }
+        public int Weight { get; }
     }
 }
