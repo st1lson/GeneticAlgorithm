@@ -8,8 +8,5 @@ namespace GeneticAlgorithm.Core
         public int MaxWeight { get; }
         public int CurrentWeight { get; }
         public List<IItem> Items { get; }
-
-        public bool TrySolve(out int result);
-        public int Solve();
     }
 }
