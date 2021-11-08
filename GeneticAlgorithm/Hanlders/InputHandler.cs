@@ -3,22 +3,24 @@ using GeneticAlgorithm.Core.Items;
 using System;
 using System.Text;
 using System.Collections.Generic;
-using GeneticAlgorithm.Core.Backpacks;
+using GeneticAlgorithm.Algorithms;
 
 namespace GeneticAlgorithm.Hanlders
 {
     internal sealed class InputHandler
     {
         private List<IItem> _items;
-        private IBackpack _backpack;
+        private IAlgorithm _algorithm;
         private readonly FileHandler _fileHandler;
         private readonly Config _config;
+        private readonly Random _random;
         private readonly string _menu;
 
         public InputHandler(Config config)
         {
             _config = config;
             _fileHandler = new(_config.Path);
+            _random = new();
             _menu = CreateMenu();
         }
 
@@ -33,6 +35,14 @@ namespace GeneticAlgorithm.Hanlders
 
             Action(value);
 
+            Console.WriteLine("Press 'Enter' key to continue");
+            ConsoleKey consoleKey = Console.ReadKey().Key;
+            if (!ConsoleKey.Enter.Equals(consoleKey))
+            {
+                return;
+            }
+
+            Console.Clear();
             Menu();
         }
 
@@ -41,15 +51,20 @@ namespace GeneticAlgorithm.Hanlders
             switch (value)
             {
                 case 1:
-                    _items ??= _fileHandler.DeserializeItems();
-                    _backpack ??= new Backpack(_config.MaxWeight, _items);
-                    if (_backpack.TrySolve(out int result))
+                    _items ??= _fileHandler.DeserializeItems(_config.Separator);
+                    _algorithm ??= new GenAlgorithm(_config, _items);
+                    if (_algorithm.TrySolve(out int result))
                     {
                         Console.WriteLine(result);
                     }
 
                     return;
                 case 2:
+                    _items = Item.RandomItems(_random);
+                    _fileHandler.SerializeItems(_items);
+                    Console.WriteLine("Items was successfully randomized");
+                    return;
+                case 3:
                     Environment.Exit(0);
                     return;
                 default:
@@ -62,7 +77,8 @@ namespace GeneticAlgorithm.Hanlders
         {
             StringBuilder stringBuilder = new();
             stringBuilder.Append("Enter '1' to solve the backpack task\n");
-            stringBuilder.Append("Enter '2' to exit\n");
+            stringBuilder.Append("Enter '2' to random items\n");
+            stringBuilder.Append("Enter '3' to exit\n");
 
             return stringBuilder.ToString();
         }
