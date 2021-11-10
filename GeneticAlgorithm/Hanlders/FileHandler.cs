@@ -11,7 +11,7 @@ namespace GeneticAlgorithm.Hanlders
 
         public FileHandler(string path) => _path = path;
 
-        public IItem[] DeserializeItems(string separator)
+        public IItem[] DeserializeItems(string[] separators)
         {
             using StreamReader streamReader = new(_path, Encoding.Default);
             string line = streamReader.ReadLine();
@@ -25,7 +25,7 @@ namespace GeneticAlgorithm.Hanlders
             while (!streamReader.EndOfStream)
             {
                 line = streamReader.ReadLine();
-                string[] parts = line.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                 if (!Int32.TryParse(parts[1], out int cost))
                 {
                     throw new Exception("Wrong file format");

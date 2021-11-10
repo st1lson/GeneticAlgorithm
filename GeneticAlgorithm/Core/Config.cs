@@ -3,7 +3,8 @@
     internal sealed class Config
     {
         public string Path { get; set; }
-        public string Separator { get; set; }
+        public string[] Separators { get; set; }
+        public string[] PossibleItems { get; set; }
         public int MaxWeight { get; set; }
         public int ItemsCount { get; set; }
         public int MinItemCost { get; set; }

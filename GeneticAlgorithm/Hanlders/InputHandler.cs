@@ -50,7 +50,7 @@ namespace GeneticAlgorithm.Hanlders
             switch (value)
             {
                 case 1:
-                    _items ??= _fileHandler.DeserializeItems(_config.Separator);
+                    _items ??= _fileHandler.DeserializeItems(_config.Separators);
                     _algorithm ??= new GenAlgorithm(_config, _items);
                     if (!_algorithm.TrySolve(out int result))
                     {
@@ -59,6 +59,7 @@ namespace GeneticAlgorithm.Hanlders
 
                     return;
                 case 2:
+                    Item.PossibleItems ??= _config.PossibleItems;
                     _items = Item.RandomItems(_random,
                                              _config.ItemsCount,
                                              _config.MinItemCost,
