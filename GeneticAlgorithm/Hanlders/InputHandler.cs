@@ -2,14 +2,13 @@
 using GeneticAlgorithm.Core.Items;
 using System;
 using System.Text;
-using System.Collections.Generic;
 using GeneticAlgorithm.Algorithms;
 
 namespace GeneticAlgorithm.Hanlders
 {
     internal sealed class InputHandler
     {
-        private List<IItem> _items;
+        private IItem[] _items;
         private IAlgorithm _algorithm;
         private readonly FileHandler _fileHandler;
         private readonly Config _config;
@@ -53,14 +52,20 @@ namespace GeneticAlgorithm.Hanlders
                 case 1:
                     _items ??= _fileHandler.DeserializeItems(_config.Separator);
                     _algorithm ??= new GenAlgorithm(_config, _items);
-                    if (_algorithm.TrySolve(out int result))
+                    if (!_algorithm.TrySolve(out int result))
                     {
                         Console.WriteLine(result);
                     }
 
                     return;
                 case 2:
-                    _items = Item.RandomItems(_random);
+                    _items = Item.RandomItems(_random,
+                                             _config.ItemsCount,
+                                             _config.MinItemCost,
+                                             _config.MaxItemCost,
+                                             _config.MinItemWeight,
+                                             _config.MaxItemWeight);
+
                     _fileHandler.SerializeItems(_items);
                     Console.WriteLine("Items was successfully randomized");
                     return;
@@ -73,7 +78,7 @@ namespace GeneticAlgorithm.Hanlders
             }
         }
 
-        private string CreateMenu()
+        private static string CreateMenu()
         {
             StringBuilder stringBuilder = new();
             stringBuilder.Append("Enter '1' to solve the backpack task\n");

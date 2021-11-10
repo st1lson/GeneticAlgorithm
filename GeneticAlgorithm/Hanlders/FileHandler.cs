@@ -1,6 +1,5 @@
 ﻿using GeneticAlgorithm.Core.Items;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -12,30 +11,41 @@ namespace GeneticAlgorithm.Hanlders
 
         public FileHandler(string path) => _path = path;
 
-        public List<IItem> DeserializeItems(string separator)
+        public IItem[] DeserializeItems(string separator)
         {
-            List<IItem> items = new();
             using StreamReader streamReader = new(_path, Encoding.Default);
             string line = streamReader.ReadLine();
+            if (!Int32.TryParse(line, out int itemsCount))
+            {
+                return default;
+            }
+
+            IItem[] items = new IItem[itemsCount];
+            int i = 0;
             while (!streamReader.EndOfStream)
             {
                 line = streamReader.ReadLine();
                 string[] parts = line.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                if (!Int32.TryParse(parts[1], out int weight))
+                if (!Int32.TryParse(parts[1], out int cost))
                 {
                     throw new Exception("Wrong file format");
                 }
 
-                items.Add(new Item(parts[0], weight));
+                if (!Int32.TryParse(parts[2], out int weight))
+                {
+                    throw new Exception("Wrong file format");
+                }
+
+                items[i++] = new Item(parts[0], cost, weight);
             }
 
             return items;
         }
 
-        public void SerializeItems(List<IItem> items)
+        public void SerializeItems(IItem[] items)
         {
             using StreamWriter streamWriter = new(_path, false, Encoding.Default);
-            streamWriter.WriteLine(items.Count);
+            streamWriter.WriteLine(items.Length);
             foreach(IItem item in items)
             {
                 streamWriter.WriteLine(item);

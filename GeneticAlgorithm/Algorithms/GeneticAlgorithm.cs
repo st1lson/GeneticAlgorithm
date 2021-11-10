@@ -2,17 +2,16 @@
 using GeneticAlgorithm.Core.Backpacks;
 using GeneticAlgorithm.Core.Items;
 using System;
-using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Algorithms
 {
     internal class GenAlgorithm : IAlgorithm
     {
         private readonly Config _config;
-        private readonly List<IItem> _items;
+        private readonly IItem[] _items;
         private readonly IBackpack _backpack;
 
-        public GenAlgorithm(Config config, List<IItem> items)
+        public GenAlgorithm(Config config, IItem[] items)
         {
             _config = config;
             _items = items;
