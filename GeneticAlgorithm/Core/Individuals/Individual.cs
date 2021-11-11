@@ -1,18 +1,17 @@
-﻿using System;
+﻿using GeneticAlgorithm.Core.Items;
+using System;
 
 namespace GeneticAlgorithm.Core.Individuals
 {
     internal class Individual : IIndividual
     {
-        public int NumberOfEvolutions { get; }
-        public int EvolutionaryFitness { get; private set; }
-        public bool IsAlive { get; private set; }
+        public double EvolutionaryFitness { get; set; }
+        public bool IsAlive { get; set; }
         public bool[] Chromosomes { get; }
 
         public Individual(bool[] chromosomes)
         {
             Chromosomes = chromosomes;
-            NumberOfEvolutions = chromosomes.Length;
             IsAlive = true;
         }
 
@@ -25,13 +24,17 @@ namespace GeneticAlgorithm.Core.Individuals
                 return false;
             }
 
-            individual = Mutate(mutationChance);
+            individual = Mutate();
 
             return true;
         }
 
-        public IIndividual Mutate(double mutationChance)
+        public IIndividual Mutate()
         {
+            Random random = new();
+            int chromosome = random.Next(Chromosomes.Length);
+            Chromosomes[chromosome] = !Chromosomes[chromosome];
+
             return default;
         }
 
@@ -43,6 +46,26 @@ namespace GeneticAlgorithm.Core.Individuals
         public void LocalUpgrade()
         {
 
+        }
+
+        public bool CheckWeight(int maxWeight, IItem[] items)
+        {
+            double weight = 0;
+            for (int i = 0; i < Chromosomes.Length; i++)
+            {
+                if (Chromosomes[i])
+                {
+                    weight += items[i].Weight;
+                }
+            }
+
+            if (weight > maxWeight)
+            {
+                IsAlive = false;
+                return false;
+            }
+
+            return true;
         }
     }
 }

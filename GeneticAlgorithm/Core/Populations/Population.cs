@@ -12,13 +12,5 @@ namespace GeneticAlgorithm.Core.Populations
             Count = count;
             Individuals = new IIndividual[count];
         }
-
-        public void InitializePopulation()
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                Individuals[i] = new Individual(0);
-            }
-        }
     }
 }
