@@ -5,7 +5,8 @@ namespace GeneticAlgorithm.Core.Individuals
 {
     internal class Individual : IIndividual
     {
-        public double EvolutionaryFitness { get; set; }
+        public int EvolutionaryFitness { get; set; }
+        public int Weight { get; set; }
         public bool IsAlive { get; set; }
         public bool[] Chromosomes { get; }
 
@@ -20,7 +21,7 @@ namespace GeneticAlgorithm.Core.Individuals
             double chance = random.NextDouble();
             if (mutationChance < chance)
             {
-                individual = null;
+                individual = this;
                 return false;
             }
 
@@ -33,14 +34,32 @@ namespace GeneticAlgorithm.Core.Individuals
         {
             Random random = new();
             int chromosome = random.Next(Chromosomes.Length);
-            Chromosomes[chromosome] = !Chromosomes[chromosome];
+            bool[] mutatedChromosomes = new bool[Chromosomes.Length];
+            Array.Copy(Chromosomes, mutatedChromosomes, Chromosomes.Length);
+            mutatedChromosomes[chromosome] = !mutatedChromosomes[chromosome];
 
-            return default;
+            return new Individual(mutatedChromosomes);
         }
 
-        public IIndividual[] Crossingover()
+        public IIndividual Crossingover(IIndividual parent)
         {
-            return default;
+            Random random = new();
+            IIndividual child = new Individual(new bool[Chromosomes.Length]);
+
+            int index = random.Next(Chromosomes.Length);
+            for (int i = 0; i < Chromosomes.Length; i++)
+            {
+                if (i < index)
+                {
+                    child.Chromosomes[i] = Chromosomes[i];
+                }
+                else
+                {
+                    child.Chromosomes[i] = parent.Chromosomes[i];
+                }
+            }
+
+            return child;
         }
 
         public void LocalUpgrade()
@@ -59,13 +78,13 @@ namespace GeneticAlgorithm.Core.Individuals
                 }
             }
 
-            if (weight > maxWeight)
+            if (weight <= maxWeight)
             {
-                IsAlive = false;
-                return false;
+                return true;
             }
 
-            return true;
+            IsAlive = false;
+            return false;
         }
     }
 }

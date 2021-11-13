@@ -1,4 +1,5 @@
-﻿using GeneticAlgorithm.Core.Items;
+﻿using GeneticAlgorithm.Core.Individuals;
+using GeneticAlgorithm.Core.Items;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Core
@@ -8,5 +9,7 @@ namespace GeneticAlgorithm.Core
         public int MaxWeight { get; }
         public int CurrentWeight { get; }
         public List<IItem> Items { get; }
+
+        public void Solve(IIndividual individual);
     }
 }

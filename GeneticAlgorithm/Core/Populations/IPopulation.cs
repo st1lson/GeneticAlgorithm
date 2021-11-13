@@ -6,5 +6,7 @@ namespace GeneticAlgorithm.Core.Populations
     {
         public int Count { get; }
         public IIndividual[] Individuals { get; }
+
+        public void Replace(IIndividual individual);
     }
 }
