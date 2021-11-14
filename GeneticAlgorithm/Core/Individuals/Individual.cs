@@ -21,7 +21,7 @@ namespace GeneticAlgorithm.Core.Individuals
         public bool TryMutate(Random random, double mutationChance, out IIndividual individual)
         {
             double chance = random.NextDouble();
-            if (mutationChance < chance)
+            if (mutationChance > chance)
             {
                 individual = this;
                 return false;
@@ -38,10 +38,10 @@ namespace GeneticAlgorithm.Core.Individuals
             int chromosome = random.Next(Chromosomes.Length);
             int[] mutatedChromosomes = new int[Chromosomes.Length];
             Array.Copy(Chromosomes, mutatedChromosomes, Chromosomes.Length);
-            if (mutatedChromosomes[chromosome] > 1)
-            {
-                mutatedChromosomes[chromosome] -= 1;
-            }
+            int firstIndex = random.Next(Chromosomes.Length / 2);
+            int secondIndex = random.Next(firstIndex, Chromosomes.Length);
+
+            (Chromosomes[firstIndex], Chromosomes[secondIndex]) = (Chromosomes[secondIndex], Chromosomes[firstIndex]);
 
             return new Individual(mutatedChromosomes);
         }
@@ -88,10 +88,15 @@ namespace GeneticAlgorithm.Core.Individuals
         public IIndividual LocalUpgrade()
         {
             Random random = new();
-            int chromosome = random.Next(Chromosomes.Length);
             int[] upgradedChromosomes = new int[Chromosomes.Length];
             Array.Copy(Chromosomes, upgradedChromosomes, Chromosomes.Length);
-            upgradedChromosomes[chromosome] *= 2;
+            int indexer = random.Next(Chromosomes.Length);
+            while (Chromosomes[indexer] > 0)
+            {
+                indexer = random.Next(Chromosomes.Length);
+            }
+
+            upgradedChromosomes[indexer] = 1;
 
             return new Individual(upgradedChromosomes);
         }

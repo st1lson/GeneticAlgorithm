@@ -8,7 +8,6 @@ namespace GeneticAlgorithm.Core.Backpacks
     internal class Backpack : IBackpack
     {
         public int MaxWeight { get; }
-        public int CurrentWeight => Items.Sum(item => item.Weight);
         public List<IItem> Items { get; }
         private readonly IItem[] _items;
 

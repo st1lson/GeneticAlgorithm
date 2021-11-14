@@ -52,17 +52,29 @@ namespace GeneticAlgorithm.Algorithms
                 {
                     individual.EvolutionaryFitness = CalculateEvolutionaryFitness(individual);
                     individual.Weight = CalculateWeight(individual);
-                    _backpack.Solve(individual);
                 }
 
                 UpdatePopulation();
 
                 IIndividual best = _population.Individuals.OrderByDescending(x => x.EvolutionaryFitness).First();
 
-                result.BestIndividual = best;
+                if (result.BestIndividual is null)
+                {
+                    result.BestIndividual = best;
+                }
+                else if (result.BestIndividual.EvolutionaryFitness < best.EvolutionaryFitness)
+                {
+                    result.BestIndividual = best;
+                }
 
                 iterator++;
                 result.Iteration = iterator;
+            }
+
+            _backpack.Solve(result.BestIndividual);
+            foreach (IItem item in _backpack.Items)
+            {
+                Console.WriteLine(item);
             }
 
             result.End();

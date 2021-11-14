@@ -26,12 +26,12 @@ namespace GeneticAlgorithm.Hanlders
             {
                 line = streamReader.ReadLine();
                 string[] parts = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                if (!Int32.TryParse(parts[1], out int cost))
+                if (!Int32.TryParse(parts[1], out int weight))
                 {
                     throw new Exception("Wrong file format");
                 }
 
-                if (!Int32.TryParse(parts[2], out int weight))
+                if (!Int32.TryParse(parts[2], out int cost))
                 {
                     throw new Exception("Wrong file format");
                 }
