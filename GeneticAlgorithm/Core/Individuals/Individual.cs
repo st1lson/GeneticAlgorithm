@@ -27,21 +27,39 @@ namespace GeneticAlgorithm.Core.Individuals
                 return false;
             }
 
-            individual = Mutate();
+            individual = SecondMutation();
 
             return true;
         }
 
-        public IIndividual Mutate()
+        public IIndividual FirstMutation()
         {
             Random random = new();
-            int chromosome = random.Next(Chromosomes.Length);
             int[] mutatedChromosomes = new int[Chromosomes.Length];
             Array.Copy(Chromosomes, mutatedChromosomes, Chromosomes.Length);
             int firstIndex = random.Next(Chromosomes.Length / 2);
             int secondIndex = random.Next(firstIndex, Chromosomes.Length);
 
             (Chromosomes[firstIndex], Chromosomes[secondIndex]) = (Chromosomes[secondIndex], Chromosomes[firstIndex]);
+
+            return new Individual(mutatedChromosomes);
+        }
+
+        public IIndividual SecondMutation()
+        {
+            Random random = new();
+            int[] mutatedChromosomes = new int[Chromosomes.Length];
+            Array.Copy(Chromosomes, mutatedChromosomes, Chromosomes.Length);
+            int index = random.Next(Chromosomes.Length);
+
+            if (mutatedChromosomes[index] > 1)
+            {
+                mutatedChromosomes[index] -= 1;
+            }
+            else
+            {
+                mutatedChromosomes[index] = 0;
+            }
 
             return new Individual(mutatedChromosomes);
         }
@@ -134,7 +152,7 @@ namespace GeneticAlgorithm.Core.Individuals
             return alive.ToArray();
         }
 
-        public IIndividual LocalUpgrade()
+        public IIndividual FirstLocalUpgrade()
         {
             Random random = new();
             int[] upgradedChromosomes = new int[Chromosomes.Length];
@@ -146,6 +164,18 @@ namespace GeneticAlgorithm.Core.Individuals
             }
 
             upgradedChromosomes[indexer] = 1;
+
+            return new Individual(upgradedChromosomes);
+        }
+
+        public IIndividual SecondLocalUpgrade()
+        {
+            Random random = new();
+            int[] upgradedChromosomes = new int[Chromosomes.Length];
+            Array.Copy(Chromosomes, upgradedChromosomes, Chromosomes.Length);
+            int index = random.Next(Chromosomes.Length);
+
+            upgradedChromosomes[index] += 1;
 
             return new Individual(upgradedChromosomes);
         }

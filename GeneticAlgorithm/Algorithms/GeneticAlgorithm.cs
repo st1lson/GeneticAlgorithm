@@ -114,7 +114,7 @@ namespace GeneticAlgorithm.Algorithms
                     mutatedChild = child;
                 }
 
-                IIndividual updatedChild = mutatedChild.LocalUpgrade();
+                IIndividual updatedChild = mutatedChild.SecondLocalUpgrade();
                 if (!updatedChild.CheckWeight(_config.MaxWeight, _items))
                 {
                     updatedChild = mutatedChild;

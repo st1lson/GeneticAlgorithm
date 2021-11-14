@@ -11,13 +11,15 @@ namespace GeneticAlgorithm.Core.Individuals
         public int[] Chromosomes { get; }
 
         public bool TryMutate(Random random, double mutationChance, out IIndividual individual);
-        public IIndividual Mutate();
+        public IIndividual FirstMutation();
+        public IIndividual SecondMutation();
 
         public IIndividual[] SinglePointCrossingover(IIndividual parent);
         public IIndividual[] TwoPointCrossingover(IIndividual parent);
         public IIndividual[] UniformCrossingover(IIndividual parent, double crossingoverChance);
 
-        public IIndividual LocalUpgrade();
+        public IIndividual FirstLocalUpgrade();
+        public IIndividual SecondLocalUpgrade();
         public bool CheckWeight(int maxWeight, IItem[] items);
     }
 }
