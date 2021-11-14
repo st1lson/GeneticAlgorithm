@@ -50,11 +50,19 @@ namespace GeneticAlgorithm.Algorithms
             {
                 foreach (IIndividual individual in _population.Individuals)
                 {
+                    individual.EvolutionaryFitness = CalculateEvolutionaryFitness(individual);
+                    individual.Weight = CalculateWeight(individual);
                     _backpack.Solve(individual);
                 }
 
                 UpdatePopulation();
+
+                IIndividual best = _population.Individuals.OrderByDescending(x => x.EvolutionaryFitness).First();
+
+                result.BestIndividual = best;
+
                 iterator++;
+                result.Iteration = iterator;
             }
 
             result.End();
@@ -76,7 +84,13 @@ namespace GeneticAlgorithm.Algorithms
         private void UpdatePopulation()
         {
             IIndividual bestParent = _population.Individuals.OrderByDescending(x => x.EvolutionaryFitness).First();
-            IIndividual randomParent = _population.Individuals[_random.Next(_config.PopulationCount)];
+            int index = 0;
+            while (index == Array.IndexOf(_population.Individuals, bestParent))
+            {
+                index = _random.Next(_config.PopulationCount);
+            }
+
+            IIndividual randomParent = _population.Individuals[index];
             IIndividual[] childs = bestParent.Crossingover(randomParent);
             childs = Individual.RemoveDeadChildren(_config.MaxWeight, _items, childs);
 
@@ -95,11 +109,13 @@ namespace GeneticAlgorithm.Algorithms
                 }
 
                 IIndividual worstIndividual = _population.Individuals.OrderBy(x => x.EvolutionaryFitness).First();
+                updatedChild.EvolutionaryFitness = CalculateEvolutionaryFitness(updatedChild);
+                updatedChild.Weight = CalculateWeight(updatedChild);
                 if (updatedChild.CheckWeight(_config.MaxWeight, _items) &&
                     !_population.Individuals.Contains(updatedChild) &&
                     updatedChild.EvolutionaryFitness > worstIndividual.EvolutionaryFitness)
                 {
-                    _population.Replace(updatedChild);
+                    _population.Replace(worstIndividual, updatedChild);
                 }
             }
         }
@@ -137,7 +153,7 @@ namespace GeneticAlgorithm.Algorithms
                     continue;
                 }
 
-                chromosomes[i] = _items[i].Cost;
+                chromosomes[i] = 1;
                 weight += _items[i].Weight;
             }
 

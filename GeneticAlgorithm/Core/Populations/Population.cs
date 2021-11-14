@@ -1,5 +1,5 @@
 ﻿using GeneticAlgorithm.Core.Individuals;
-using System.Linq;
+using System;
 
 namespace GeneticAlgorithm.Core.Populations
 {
@@ -14,10 +14,10 @@ namespace GeneticAlgorithm.Core.Populations
             Individuals = new IIndividual[count];
         }
 
-        public void Replace(IIndividual individual)
+        public void Replace(IIndividual oldIndividual, IIndividual newIndividual)
         {
-            IIndividual[] individuals = Individuals.OrderByDescending(x => x.EvolutionaryFitness).ToArray();
-            individuals[^1] = individual;
+            int index = Array.IndexOf(Individuals, oldIndividual);
+            Individuals[index] = newIndividual;
         }
     }
 }

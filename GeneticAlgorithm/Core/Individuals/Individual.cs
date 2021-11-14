@@ -1,6 +1,7 @@
 ﻿using GeneticAlgorithm.Core.Items;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace GeneticAlgorithm.Core.Individuals
 {
@@ -48,7 +49,7 @@ namespace GeneticAlgorithm.Core.Individuals
         public IIndividual[] Crossingover(IIndividual parent)
         {
             Random random = new();
-            IIndividual[] childs = new IIndividual[Chromosomes.Length];
+            IIndividual[] childs = new IIndividual[2];
             childs[0] = new Individual(new int[Chromosomes.Length]);
             childs[1] = new Individual(new int[Chromosomes.Length]);
 
@@ -88,14 +89,11 @@ namespace GeneticAlgorithm.Core.Individuals
         {
             Random random = new();
             int chromosome = random.Next(Chromosomes.Length);
-            int[] mutatedChromosomes = new int[Chromosomes.Length];
-            Array.Copy(Chromosomes, mutatedChromosomes, Chromosomes.Length);
-            if (mutatedChromosomes[chromosome] > 1)
-            {
-                mutatedChromosomes[chromosome] -= 1;
-            }
+            int[] upgradedChromosomes = new int[Chromosomes.Length];
+            Array.Copy(Chromosomes, upgradedChromosomes, Chromosomes.Length);
+            upgradedChromosomes[chromosome] *= 2;
 
-            return new Individual(mutatedChromosomes);
+            return new Individual(upgradedChromosomes);
         }
 
         public bool CheckWeight(int maxWeight, IItem[] items)
@@ -113,6 +111,21 @@ namespace GeneticAlgorithm.Core.Individuals
 
             IsAlive = false;
             return false;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append("Individual:\n");
+            stringBuilder.Append($"Fitness: {EvolutionaryFitness};\n");
+            stringBuilder.Append($"Weight: {Weight};\n");
+            int i = 0;
+            foreach (int item in Chromosomes)
+            {
+                stringBuilder.Append(i++ + "--" + item +"\n");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }
