@@ -103,7 +103,7 @@ namespace GeneticAlgorithm.Algorithms
             }
 
             IIndividual randomParent = _population.Individuals[index];
-            IIndividual[] childs = bestParent.Crossingover(randomParent);
+            IIndividual[] childs = bestParent.UniformCrossingover(randomParent, _config.CrossingoverChance);
             childs = Individual.RemoveDeadChildren(_config.MaxWeight, _items, childs);
 
             foreach (IIndividual child in childs)

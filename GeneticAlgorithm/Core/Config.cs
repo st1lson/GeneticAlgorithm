@@ -14,5 +14,6 @@
         public int MaxItemWeight { get; set; }
         public int PopulationCount { get; set; }
         public double EvolutionChance { get; set; }
+        public double CrossingoverChance { get; set; }
     }
 }

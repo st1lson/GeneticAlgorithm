@@ -46,7 +46,7 @@ namespace GeneticAlgorithm.Core.Individuals
             return new Individual(mutatedChromosomes);
         }
 
-        public IIndividual[] Crossingover(IIndividual parent)
+        public IIndividual[] SinglePointCrossingover(IIndividual parent) // Single-point crossover
         {
             Random random = new();
             IIndividual[] childs = new IIndividual[2];
@@ -57,6 +57,55 @@ namespace GeneticAlgorithm.Core.Individuals
             for (int i = 0; i < Chromosomes.Length; i++)
             {
                 if (i < index)
+                {
+                    childs[0].Chromosomes[i] = Chromosomes[i];
+                    childs[1].Chromosomes[i] = parent.Chromosomes[i];
+                }
+                else
+                {
+                    childs[0].Chromosomes[i] = parent.Chromosomes[i];
+                    childs[1].Chromosomes[i] = Chromosomes[i];
+                }
+            }
+
+            return childs;
+        }
+
+        public IIndividual[] TwoPointCrossingover(IIndividual parent)
+        {
+            Random random = new();
+            IIndividual[] childs = new IIndividual[2];
+            childs[0] = new Individual(new int[Chromosomes.Length]);
+            childs[1] = new Individual(new int[Chromosomes.Length]);
+            int firstPoint = random.Next(Chromosomes.Length);
+            int secondPoint = random.Next(firstPoint, Chromosomes.Length);
+            for (int i = 0; i < Chromosomes.Length; i++)
+            {
+                if (i < firstPoint || i > secondPoint)
+                {
+                    childs[0].Chromosomes[i] = Chromosomes[i];
+                    childs[1].Chromosomes[i] = parent.Chromosomes[i];
+                }
+                else
+                {
+                    childs[0].Chromosomes[i] = parent.Chromosomes[i];
+                    childs[1].Chromosomes[i] = Chromosomes[i];
+                }
+            }
+
+            return childs;
+        }
+
+        public IIndividual[] UniformCrossingover(IIndividual parent, double crossingoverChance)
+        {
+            Random random = new();
+            IIndividual[] childs = new IIndividual[2];
+            childs[0] = new Individual(new int[Chromosomes.Length]);
+            childs[1] = new Individual(new int[Chromosomes.Length]);
+            for (int i = 0; i < Chromosomes.Length; i++)
+            {
+                double currentChance = random.NextDouble();
+                if (currentChance > crossingoverChance)
                 {
                     childs[0].Chromosomes[i] = Chromosomes[i];
                     childs[1].Chromosomes[i] = parent.Chromosomes[i];
@@ -121,7 +170,6 @@ namespace GeneticAlgorithm.Core.Individuals
         public override string ToString()
         {
             StringBuilder stringBuilder = new();
-            stringBuilder.Append("Individual:\n");
             stringBuilder.Append($"Fitness: {EvolutionaryFitness};\n");
             stringBuilder.Append($"Weight: {Weight};\n");
             int i = 0;

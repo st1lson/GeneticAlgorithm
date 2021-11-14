@@ -13,7 +13,9 @@ namespace GeneticAlgorithm.Core.Individuals
         public bool TryMutate(Random random, double mutationChance, out IIndividual individual);
         public IIndividual Mutate();
 
-        public IIndividual[] Crossingover(IIndividual parent);
+        public IIndividual[] SinglePointCrossingover(IIndividual parent);
+        public IIndividual[] TwoPointCrossingover(IIndividual parent);
+        public IIndividual[] UniformCrossingover(IIndividual parent, double crossingoverChance);
 
         public IIndividual LocalUpgrade();
         public bool CheckWeight(int maxWeight, IItem[] items);
