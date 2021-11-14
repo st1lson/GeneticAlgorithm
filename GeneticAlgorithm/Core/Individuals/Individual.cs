@@ -202,11 +202,6 @@ namespace GeneticAlgorithm.Core.Individuals
             StringBuilder stringBuilder = new();
             stringBuilder.Append($"Fitness: {EvolutionaryFitness};\n");
             stringBuilder.Append($"Weight: {Weight};\n");
-            int i = 0;
-            foreach (int item in Chromosomes)
-            {
-                stringBuilder.Append(i++ + "--" + item +"\n");
-            }
 
             return stringBuilder.ToString();
         }

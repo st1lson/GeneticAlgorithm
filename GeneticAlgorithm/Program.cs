@@ -1,7 +1,6 @@
 ﻿using GeneticAlgorithm.Core;
 using GeneticAlgorithm.Hanlders;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.IO;
 
 namespace GeneticAlgorithm

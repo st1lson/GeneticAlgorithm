@@ -28,7 +28,7 @@ namespace GeneticAlgorithm.Algorithms
         public bool TrySolve(out Result result)
         {
             result = Solve();
-            /*try
+            try
             {
                 result = Solve();
             }
@@ -36,7 +36,7 @@ namespace GeneticAlgorithm.Algorithms
             {
                 result = default;
                 return false;
-            }*/
+            }
 
             return true;
         }
