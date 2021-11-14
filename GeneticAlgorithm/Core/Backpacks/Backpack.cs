@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GeneticAlgorithm.Core.Individuals;
 using GeneticAlgorithm.Core.Items;
@@ -24,7 +23,7 @@ namespace GeneticAlgorithm.Core.Backpacks
         {
             for (int i = 0; i < individual.Chromosomes.Length; i++)
             {
-                if (individual.Chromosomes[i])
+                for (int j = 0; j < individual.Chromosomes[i]; j++)
                 {
                     Items.Add(_items[i]);
                 }

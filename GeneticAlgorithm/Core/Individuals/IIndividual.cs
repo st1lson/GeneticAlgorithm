@@ -8,14 +8,14 @@ namespace GeneticAlgorithm.Core.Individuals
         public int EvolutionaryFitness { get; set; }
         public int Weight { get; set; }
         public bool IsAlive { get; set; }
-        public bool[] Chromosomes { get; }
+        public int[] Chromosomes { get; }
 
         public bool TryMutate(Random random, double mutationChance, out IIndividual individual);
         public IIndividual Mutate();
 
-        public IIndividual Crossingover(IIndividual parent);
+        public IIndividual[] Crossingover(IIndividual parent);
 
-        public void LocalUpgrade();
+        public IIndividual LocalUpgrade();
         public bool CheckWeight(int maxWeight, IItem[] items);
     }
 }

@@ -52,7 +52,7 @@ namespace GeneticAlgorithm.Hanlders
                 case 1:
                     _items ??= _fileHandler.DeserializeItems(_config.Separators);
                     _algorithm ??= new GenAlgorithm(_config, _random, _items);
-                    if (!_algorithm.TrySolve(out Result result))
+                    if (_algorithm.TrySolve(out Result result))
                     {
                         Console.WriteLine(result);
                     }

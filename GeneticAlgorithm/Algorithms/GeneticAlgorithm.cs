@@ -4,6 +4,7 @@ using GeneticAlgorithm.Core.Individuals;
 using GeneticAlgorithm.Core.Items;
 using GeneticAlgorithm.Core.Populations;
 using System;
+using System.Linq;
 
 namespace GeneticAlgorithm.Algorithms
 {
@@ -44,21 +45,19 @@ namespace GeneticAlgorithm.Algorithms
         {
             Result result = new();
             InitializePopulation();
-            for (int i = 0; i < _config.IterationsCount; i++)
+            int iterator = 0;
+            while (iterator < _config.IterationsCount)
             {
                 foreach (IIndividual individual in _population.Individuals)
                 {
                     _backpack.Solve(individual);
-                    individual.TryMutate(_random, _config.EvolutionChance, out IIndividual newIndividual);
-                    if (newIndividual.CheckWeight(_config.MaxWeight, _items))
-                    {
-                        _population.Replace(newIndividual);
-                    }
                 }
+
+                UpdatePopulation();
+                iterator++;
             }
 
             result.End();
-
             return result;
         }
 
@@ -66,12 +65,42 @@ namespace GeneticAlgorithm.Algorithms
         {
             for (int i = 0; i < _config.PopulationCount; i++)
             {
-                _population.Individuals[i] = new Individual(InitialSetup());
+                _population.Individuals[i] = new Individual(InitialSetup(i));
                 _population.Individuals[i].EvolutionaryFitness = 
                     CalculateEvolutionaryFitness(_population.Individuals[i]);
                 _population.Individuals[i].Weight = 
                     CalculateWeight(_population.Individuals[i]);
-                _population.Individuals[i].CheckWeight(_config.MaxWeight, _items);
+            }
+        }
+
+        private void UpdatePopulation()
+        {
+            IIndividual bestParent = _population.Individuals.OrderByDescending(x => x.EvolutionaryFitness).First();
+            IIndividual randomParent = _population.Individuals[_random.Next(_config.PopulationCount)];
+            IIndividual[] childs = bestParent.Crossingover(randomParent);
+            childs = Individual.RemoveDeadChildren(_config.MaxWeight, _items, childs);
+
+            foreach (IIndividual child in childs)
+            {
+                child.TryMutate(_random, _config.EvolutionChance, out IIndividual mutatedChild);
+                if (!mutatedChild.CheckWeight(_config.MaxWeight, _items))
+                {
+                    mutatedChild = child;
+                }
+
+                IIndividual updatedChild = mutatedChild.LocalUpgrade();
+                if (!updatedChild.CheckWeight(_config.MaxWeight, _items))
+                {
+                    updatedChild = mutatedChild;
+                }
+
+                IIndividual worstIndividual = _population.Individuals.OrderBy(x => x.EvolutionaryFitness).First();
+                if (updatedChild.CheckWeight(_config.MaxWeight, _items) &&
+                    !_population.Individuals.Contains(updatedChild) &&
+                    updatedChild.EvolutionaryFitness > worstIndividual.EvolutionaryFitness)
+                {
+                    _population.Replace(updatedChild);
+                }
             }
         }
 
@@ -80,10 +109,7 @@ namespace GeneticAlgorithm.Algorithms
             int cost = 0;
             for (int i = 0; i < individual.Chromosomes.Length; i++)
             {
-                if (individual.Chromosomes[i])
-                {
-                    cost += _items[i].Cost;
-                }
+                cost += _items[i].Cost * individual.Chromosomes[i];
             }
 
             return cost;
@@ -94,32 +120,25 @@ namespace GeneticAlgorithm.Algorithms
             int weight = 0;
             for (int i = 0; i < individual.Chromosomes.Length; i++)
             {
-                if (individual.Chromosomes[i])
-                {
-                    weight += _items[i].Weight;
-                }
+                weight += _items[i].Weight * individual.Chromosomes[i];
             }
 
             return weight;
         }
 
-        private bool[] InitialSetup()
+        private int[] InitialSetup(int index)
         {
             int weight = 0;
-            int pointer = 0;
-            bool[] chromosomes = new bool[_items.Length];
+            int[] chromosomes = new int[_items.Length];
             for (int i = 0; i < _items.Length; i++)
             {
-                int value = _random.Next(2);
-                chromosomes[i] = value != 0;    // _ = value == 0 ? chromosomes[i] = false : chromosomes[i] = true;
-                weight += _items[i].Weight;
-                if (weight > _config.MaxWeight)
+                if (index != i)
                 {
-                    chromosomes[pointer] = !chromosomes[pointer];
-                    return chromosomes;
+                    continue;
                 }
 
-                pointer = i;
+                chromosomes[i] = _items[i].Cost;
+                weight += _items[i].Weight;
             }
 
             return chromosomes;
