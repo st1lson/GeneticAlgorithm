@@ -28,7 +28,7 @@ namespace GeneticAlgorithm.Algorithms
             StringBuilder stringBuilder = new();
             stringBuilder.Append($"Iterations: {Iteration}\n");
             stringBuilder.Append($"Best individual: {BestIndividual}\n");
-            stringBuilder.Append(_finished ? $"Ended in {Time}\n" : $"Current time is {DateTime.Now - _startTime}\n");
+            stringBuilder.Append(_finished ? $"Ended in {Time.TotalSeconds}\n" : $"Current time is {(DateTime.Now - _startTime).TotalSeconds}\n");
 
             return stringBuilder.ToString();
         }

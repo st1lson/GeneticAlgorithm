@@ -27,7 +27,6 @@ namespace GeneticAlgorithm.Algorithms
 
         public bool TrySolve(out Result result)
         {
-            result = Solve();
             try
             {
                 result = Solve();
