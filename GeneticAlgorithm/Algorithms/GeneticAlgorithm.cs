@@ -66,6 +66,11 @@ namespace GeneticAlgorithm.Algorithms
                     result.BestIndividual = best;
                 }
 
+                if (iterator % 100 == 0)
+                {
+                    Console.WriteLine(result);
+                }
+
                 iterator++;
                 result.Iteration = iterator;
             }
@@ -113,20 +118,20 @@ namespace GeneticAlgorithm.Algorithms
                     mutatedChild = child;
                 }
 
-                IIndividual updatedChild = mutatedChild.SecondLocalUpgrade();
-                if (!updatedChild.CheckWeight(_config.MaxWeight, _items))
+                IIndividual upgradedChild = mutatedChild.SecondLocalUpgrade();
+                if (!upgradedChild.CheckWeight(_config.MaxWeight, _items))
                 {
-                    updatedChild = mutatedChild;
+                    upgradedChild = mutatedChild;
                 }
 
                 IIndividual worstIndividual = _population.Individuals.OrderBy(x => x.EvolutionaryFitness).First();
-                updatedChild.EvolutionaryFitness = CalculateEvolutionaryFitness(updatedChild);
-                updatedChild.Weight = CalculateWeight(updatedChild);
-                if (updatedChild.CheckWeight(_config.MaxWeight, _items) &&
-                    !_population.Individuals.Contains(updatedChild) &&
-                    updatedChild.EvolutionaryFitness > worstIndividual.EvolutionaryFitness)
+                upgradedChild.EvolutionaryFitness = CalculateEvolutionaryFitness(upgradedChild);
+                upgradedChild.Weight = CalculateWeight(upgradedChild);
+                if (upgradedChild.CheckWeight(_config.MaxWeight, _items) &&
+                    !_population.Individuals.Contains(upgradedChild) &&
+                    upgradedChild.EvolutionaryFitness > worstIndividual.EvolutionaryFitness)
                 {
-                    _population.Replace(worstIndividual, updatedChild);
+                    _population.Replace(worstIndividual, upgradedChild);
                 }
             }
         }

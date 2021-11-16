@@ -89,7 +89,7 @@ namespace GeneticAlgorithm.Core.Individuals
             return childs;
         }
 
-        public IIndividual[] TwoPointCrossingover(IIndividual parent)
+        public IIndividual[] TwoPointCrossingover(IIndividual parent) // Two-point crossover
         {
             Random random = new();
             IIndividual[] childs = new IIndividual[2];
@@ -114,7 +114,7 @@ namespace GeneticAlgorithm.Core.Individuals
             return childs;
         }
 
-        public IIndividual[] UniformCrossingover(IIndividual parent, double crossingoverChance)
+        public IIndividual[] UniformCrossingover(IIndividual parent, double crossingoverChance) // Uniform crossover
         {
             Random random = new();
             IIndividual[] childs = new IIndividual[2];
